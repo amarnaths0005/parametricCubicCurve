@@ -21,7 +21,7 @@ Requirements:
 Tested on Chrome and Firefox, on Windows.
 Uses the three.js library. 
 
-Open the file index.html in your browser.
+Open the file <i>index.html</i> in your browser.
 
 Please send feedback to amarnaths.codeproject@gmail.com
 
