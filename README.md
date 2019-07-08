@@ -6,7 +6,7 @@ HTML Program to draw and manipulate a Parametric Cubic Curve in its Four Point F
 Requirements:
    1. Should enable the user to modify the x, y, z coordinates of four points, corresponding to u values of 0, 1/3, 2/3 and 1,
       in the Four Point Form of a Parametric Cubic Curve.
-   2. Should enable the user to modify the x, y, z coordinates of the two end points u = 1 and 1, 
+   2. Should enable the user to modify the x, y, z coordinates of the two end points u = 0 and 1, 
       and also the x, y, z components of the derivatives at these two end points
       in case of the Hermite Form of the Parametric Cubic Curve.
    3. The range for the coordinates should be in [-1, 1], and the range
