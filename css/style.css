@@ -1,0 +1,34 @@
+.container {
+    display: grid;
+    grid-template-columns:1fr 4fr;
+}
+
+#leftPanel {
+    background: darkblue;
+}
+
+* {
+    font-family: Arial, Verdana, sans-serif;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.tablink {
+    background-color: darkblue;
+    color: whitesmoke;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 2px 2px;
+    font-size: 17px;
+    width: 50%;
+  }
+
+#fourPoints {
+    background-color: #27408B;
+}
+
+#hermite {
+    background-color: #5971AD;
+}
