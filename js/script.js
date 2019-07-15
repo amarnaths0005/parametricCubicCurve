@@ -344,7 +344,7 @@ function changeUvalue() {
 
     let sphereGeometry = new THREE.SphereGeometry(.02, 20, 20);
     let sphereMaterial = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
+        color: 0xffff00,
         wireframe: false
     });
     pointU = new THREE.Mesh(sphereGeometry, sphereMaterial);
