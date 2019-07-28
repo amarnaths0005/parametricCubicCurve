@@ -21,13 +21,13 @@
     Uses the three.js library. 
  */
 
-let scene;
-let camera;
-let renderer;
+'use strict'
+
+let scene, camera, renderer;
 let points = [];
 let spheres = [];
 let controls;
-let halfCubeSide;
+let halfCubeSide, width;
 let p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z, p4x, p4y, p4z;
 let p1xh, p1yh, p1zh, p2xh, p2yh, p2zh;
 let p1dxh, p1dyh, p1dzh, p2dxh, p2dyh, p2dzh;
@@ -52,11 +52,11 @@ window.onload = init;
 
 function init() {
     scene = new THREE.Scene();
-    let width = 4 * window.innerWidth / 5;
+    width = 4 * window.innerWidth / 5;
     camera = new THREE.PerspectiveCamera(45, width / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer();
     uRange = document.getElementById('uValue');
-    camRadius = 5; //Math.sqrt(3.5 * 3.5 + 3.5 * 3.5)
+    camRadius = 5;
     noUPoints = 1000;
     uStep = 1.0 / noUPoints;
 
@@ -64,44 +64,8 @@ function init() {
     document.getElementById("defaultOpen").click();
 
     cameraAngle = 25; // degrees
-
-    // Initialize points for the Four Point Form
-    p1x = -1.0;
-    p1y = -1.0;
-    p1z = -1.0;
-
-    p2x = 0.9;
-    p2y = -0.2;
-    p2z = -0.2;
-
-    p3x = 0.5;
-    p3y = 0.5;
-    p3z = 0.5;
-
-    p4x = 1.0;
-    p4y = 1.0;
-    p4z = 1.0;
-
-    // Initialize points and derivatives for the Hermite Form
-    p1xh = -1.0;
-    p1yh = -1.0;
-    p1zh = -1.0;
-
-    p2xh = 1.0;
-    p2yh = 1.0;
-    p2zh = 1.0;
-
-    p1dxh = 0.0;
-    p1dyh = 7.5;
-    p1dzh = -0.5;
-
-    p2dxh = 0.5;
-    p2dyh = 9.5;
-    p2dzh = 0.5;
-
-    uVal = 0.0;
+    initializeValues();
     pageCurrent = 'fourPoints';
-
 
     // Point P1 - Four Point Form
     p1xRange = document.getElementById('point1x');
@@ -318,7 +282,6 @@ function init() {
     scene.add(arrowHelper3);
 
     setupCubePoints();
-    setupBoundaryPoints();
     setupWireframeBox();
     handleCameraAngle();
     computeCurveFourPointsForm();
@@ -329,38 +292,32 @@ function init() {
     render();
 }
 
+function initializeValues() {
+    // Initialize points for the Four Point Form
+    p1x = -1.0; p1y = -1.0; p1z = -1.0;
+    p2x = 0.9; p2y = -0.2; p2z = -0.2;
+    p3x = 0.5; p3y = 0.5; p3z = 0.5;
+    p4x = 1.0; p4y = 1.0; p4z = 1.0;
+
+    // Initialize points and derivatives for the Hermite Form
+    p1xh = -1.0; p1yh = -1.0; p1zh = -1.0;
+    p2xh = 1.0; p2yh = 1.0; p2zh = 1.0;
+    p1dxh = 0.0; p1dyh = 7.5; p1dzh = -0.5;
+    p2dxh = 0.5; p2dyh = 9.5; p2dzh = 0.5;
+
+    uVal = 0.25;
+}
+
 function changeUvalue() {
     scene.remove(pointU);
 
     uVal = parseFloat(uRange.value);
-    let u2, u3, coeff1, coeff2, coeff3, coeff4, xCurve, yCurve, zCurve;
+    let pt;
 
     if (pageCurrent === 'fourPoints') {
-        u2 = uVal * uVal;
-        u3 = u2 * uVal;
-
-        // This is the Four Point Formula from Mortenson's book on Geometric Modeling
-        // For values of u being 0, 1/3, 2/3 and 1.
-        coeff1 = -4.5 * u3 + 9 * u2 - 5.5 * uVal + 1;
-        coeff2 = 13.5 * u3 - 22.5 * u2 + 9 * uVal;
-        coeff3 = -13.5 * u3 + 18 * u2 - 4.5 * uVal;
-        coeff4 = 4.5 * u3 - 4.5 * u2 + uVal;
-        xCurve = p1x * coeff1 + p2x * coeff2 + p3x * coeff3 + p4x * coeff4;
-        yCurve = p1y * coeff1 + p2y * coeff2 + p3y * coeff3 + p4y * coeff4;
-        zCurve = p1z * coeff1 + p2z * coeff2 + p3z * coeff3 + p4z * coeff4;
+        pt = computePointFourPointForm(uVal);
     } else { // Hermite
-        u2 = uVal * uVal;
-        u3 = u2 * uVal;
-
-        // This is the Hermite Formula from Mortenson's book on Geometric Modeling
-        // u and du at the endpoints.
-        coeff1 = 2 * u3 - 3 * u2 + 1;
-        coeff2 = -2 * u3 + 3 * u2;
-        coeff3 = u3 - 2 * u2 + uVal;
-        coeff4 = u3 - u2;
-        xCurve = p1xh * coeff1 + p2xh * coeff2 + p1dxh * coeff3 + p2dxh * coeff4;
-        yCurve = p1yh * coeff1 + p2yh * coeff2 + p1dyh * coeff3 + p2dyh * coeff4;
-        zCurve = p1zh * coeff1 + p2zh * coeff2 + p1dzh * coeff3 + p2dzh * coeff4;
+        pt = computePointHermiteForm(uVal);
     }
 
     let sphereGeometry = new THREE.SphereGeometry(.02, 20, 20);
@@ -369,10 +326,9 @@ function changeUvalue() {
         wireframe: false
     });
     pointU = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    pointU.position.x = xCurve;
-    pointU.position.y = yCurve;
-    pointU.position.z = zCurve;
-
+    pointU.position.x = pt.xVal;
+    pointU.position.y = pt.yVal;
+    pointU.position.z = pt.zVal;
     scene.add(pointU);
 }
 
@@ -390,11 +346,9 @@ function openPage(pageName, elmnt, color) {
     elmnt.style.backgroundColor = color;
 
     if (pageName === 'hermite') {
-        console.log('Hermite');
         pageCurrent = 'hermite';
         computeCurveHermiteForm();
     } else {
-        console.log('Four Points');
         pageCurrent = 'fourPoints';
         computeCurveFourPointsForm();
     }
@@ -437,28 +391,63 @@ function setupFourPoints() {
     scene.add(point4);
 }
 
-function computeCurveFourPointsForm() {
-    setupFourPoints();
-    curvePoints.length = 0;
-    let uVal, u2, u3;
+function computePointFourPointForm(uVal) {
+    let u2, u3;
     let coeff1, coeff2, coeff3, coeff4;
     let xCurve, yCurve, zCurve;
 
+    u2 = uVal * uVal;
+    u3 = u2 * uVal;
+
+    // This is the Four Point Formula from Mortenson's book on Geometric Modeling
+    // For values of u being 0, 1/3, 2/3 and 1.
+    coeff1 = -4.5 * u3 + 9 * u2 - 5.5 * uVal + 1;
+    coeff2 = 13.5 * u3 - 22.5 * u2 + 9 * uVal;
+    coeff3 = -13.5 * u3 + 18 * u2 - 4.5 * uVal;
+    coeff4 = 4.5 * u3 - 4.5 * u2 + uVal;
+    xCurve = p1x * coeff1 + p2x * coeff2 + p3x * coeff3 + p4x * coeff4;
+    yCurve = p1y * coeff1 + p2y * coeff2 + p3y * coeff3 + p4y * coeff4;
+    zCurve = p1z * coeff1 + p2z * coeff2 + p3z * coeff3 + p4z * coeff4;
+    return {
+        xVal: xCurve,
+        yVal: yCurve,
+        zVal: zCurve
+    };
+}
+
+function computePointHermiteForm(uVal) {
+    let u2, u3;
+    let coeff1, coeff2, coeff3, coeff4;
+    let xCurve, yCurve, zCurve;
+
+    u2 = uVal * uVal;
+    u3 = u2 * uVal;
+
+    // This is the Hermite Formula from Mortenson's book on Geometric Modeling
+    // u and du at the endpoints.
+    coeff1 = 2 * u3 - 3 * u2 + 1;
+    coeff2 = -2 * u3 + 3 * u2;
+    coeff3 = u3 - 2 * u2 + uVal;
+    coeff4 = u3 - u2;
+    xCurve = p1xh * coeff1 + p2xh * coeff2 + p1dxh * coeff3 + p2dxh * coeff4;
+    yCurve = p1yh * coeff1 + p2yh * coeff2 + p1dyh * coeff3 + p2dyh * coeff4;
+    zCurve = p1zh * coeff1 + p2zh * coeff2 + p1dzh * coeff3 + p2dzh * coeff4;
+    return {
+        xVal: xCurve,
+        yVal: yCurve,
+        zVal: zCurve
+    };
+}
+
+function computeCurveFourPointsForm() {
+    setupFourPoints();
+    curvePoints.length = 0;
+    let uVal;
+
     for (let i = 0; i < noUPoints; ++i) {
         uVal = uStep * i;
-        u2 = uVal * uVal;
-        u3 = u2 * uVal;
-
-        // This is the Four Point Formula from Mortenson's book on Geometric Modeling
-        // For values of u being 0, 1/3, 2/3 and 1.
-        coeff1 = -4.5 * u3 + 9 * u2 - 5.5 * uVal + 1;
-        coeff2 = 13.5 * u3 - 22.5 * u2 + 9 * uVal;
-        coeff3 = -13.5 * u3 + 18 * u2 - 4.5 * uVal;
-        coeff4 = 4.5 * u3 - 4.5 * u2 + uVal;
-        xCurve = p1x * coeff1 + p2x * coeff2 + p3x * coeff3 + p4x * coeff4;
-        yCurve = p1y * coeff1 + p2y * coeff2 + p3y * coeff3 + p4y * coeff4;
-        zCurve = p1z * coeff1 + p2z * coeff2 + p3z * coeff3 + p4z * coeff4;
-        let poi = new THREE.Vector3(xCurve, yCurve, zCurve);
+        let pt = computePointFourPointForm(uVal);
+        let poi = new THREE.Vector3(pt.xVal, pt.yVal, pt.zVal);
         curvePoints.push(poi);
     }
     renderCurve();
@@ -493,25 +482,12 @@ function setupHermitePoints() {
 function computeCurveHermiteForm() {
     setupHermitePoints();
     curvePoints.length = 0;
-    let uVal, u2, u3;
-    let coeff1, coeff2, coeff3, coeff4;
-    let xCurve, yCurve, zCurve;
+    let uVal;
 
     for (let i = 0; i < noUPoints; ++i) {
         uVal = uStep * i;
-        u2 = uVal * uVal;
-        u3 = u2 * uVal;
-
-        // This is the Hermite Formula from Mortenson's book on Geometric Modeling
-        // u and du at the endpoints.
-        coeff1 = 2 * u3 - 3 * u2 + 1;
-        coeff2 = -2 * u3 + 3 * u2;
-        coeff3 = u3 - 2 * u2 + uVal;
-        coeff4 = u3 - u2;
-        xCurve = p1xh * coeff1 + p2xh * coeff2 + p1dxh * coeff3 + p2dxh * coeff4;
-        yCurve = p1yh * coeff1 + p2yh * coeff2 + p1dyh * coeff3 + p2dyh * coeff4;
-        zCurve = p1zh * coeff1 + p2zh * coeff2 + p1dzh * coeff3 + p2dzh * coeff4;
-        let poi = new THREE.Vector3(xCurve, yCurve, zCurve);
+        let pt = computePointHermiteForm(uVal);
+        let poi = new THREE.Vector3(pt.xVal, pt.yVal, pt.zVal);
         curvePoints.push(poi);
     }
     renderCurve();
@@ -528,8 +504,6 @@ function renderCurve() {
     for (let i = 0; i < curvePoints.length; ++i) {
         geometry.vertices.push(curvePoints[i]);
     }
-    //console.log("CurvePoints " + curvePoints.length);
-    //console.log(curvePoints[344].x, curvePoints[344].y, curvePoints[344].z); // Just a random point
     curveLine = new THREE.Line(geometry, material);
     scene.add(curveLine);
     render();
@@ -554,27 +528,6 @@ function setupCubePoints() {
     points.push(pt);
     pt = new THREE.Vector3(0, 0, 0); // Point O
     points.push(pt);
-}
-
-function setupBoundaryPoints() {
-    let sphereGeometry = new THREE.SphereGeometry(.02, 20, 20);
-    let sphereMaterial = new THREE.MeshBasicMaterial({
-        color: 0x7777FF,
-        wireframe: false
-    });
-
-    for (let i = 0; i < points.length; ++i) {
-        let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphere.position.x = points[i].x;
-        sphere.position.y = points[i].y;
-        sphere.position.z = points[i].z;
-        spheres.push(sphere);
-    }
-    console.log(spheres.length);
-
-    for (let i = 0; i < spheres.length; ++i) {
-        scene.add(spheres[i]);
-    }
 }
 
 /* Doesn't work well - shows the actual triangulation of the cube
