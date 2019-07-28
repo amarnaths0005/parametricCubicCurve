@@ -1,5 +1,5 @@
 # parametricCubicCurve
-App to display a Parametric Cubic Curve on the screen, and modify its parameters.
+App to display a Parametric Cubic Curve in 3D, and modify its parameters.
 
 HTML Program to draw and manipulate a Parametric Cubic Curve in its Four Point Form and Hermite Form.
 
@@ -11,8 +11,8 @@ Requirements:
       in case of the Hermite Form of the Parametric Cubic Curve.
    3. The range for the coordinates should be in [-1, 1], and the range
       for the derivatives should be [-10, 10].
-   4. Should display the Parametric Cubic Curve on the screen, and this curve should 
-      change dynamically as the user modifies any of the values.
+   4. Should display the Parametric Cubic Curve in 3D, and this curve should 
+      change dynamically as the user modifies any of the values using sliders.
    5. Should display the bounding box of dimension 2 units, centred at the origin.
    6. Should enable the user to modify the camera angle, from which viewing is done.
    7. Should enable the user to modify the u value, and should display a moving point
