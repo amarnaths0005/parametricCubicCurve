@@ -47,6 +47,7 @@ let arrowHelper1, arrowHelper2, arrowHelper3;
 let arrowDirection1 = new THREE.Vector3();
 let arrowDirection2 = new THREE.Vector3();
 let arrowDirection3 = new THREE.Vector3();
+let bnFourLine1, bnFourLine2, bhHermLine1, bnHermLine2;
 
 window.onload = init;
 
@@ -256,6 +257,42 @@ function init() {
         changeUvalue();
     }, false);
 
+    document.getElementById("bnFourLine1").addEventListener('click',
+        function () {
+            setValuesFourLine1();
+        }, false);
+
+    document.getElementById("bnFourLine2").addEventListener('click',
+        function () {
+            setValuesFourLine2();
+        }, false);
+
+    document.getElementById("bnFourLine3").addEventListener('click',
+        function () {
+            setValuesFourLine3();
+        }, false);
+
+    document.getElementById("bnHermiteLine1").addEventListener('click',
+        function () {
+            setValuesHermiteLine1();
+        }, false);
+
+    document.getElementById("bnHermiteLine2").addEventListener('click',
+        function () {
+            setValuesHermiteLine2();
+        }, false);
+
+    document.getElementById("bnHermiteLine3").addEventListener('click',
+        function () {
+            setValuesHermiteLine3();
+        }, false);
+
+    document.getElementById("bnHermiteLine4").addEventListener('click',
+        function () {
+            setValuesHermiteLine4();
+        }, false);
+
+
     halfCubeSide = 1;
 
     renderer.setClearColor(new THREE.Color(0x000000));
@@ -281,15 +318,135 @@ function init() {
     arrowHelper3 = new THREE.ArrowHelper(arrowDirection3, origin, 0.4, 0x0000ff, 0.07, 0.04);
     scene.add(arrowHelper3);
 
-    setupCubePoints();
     setupWireframeBox();
     handleCameraAngle();
     computeCurveFourPointsForm();
-
     document.getElementById("webglOp").appendChild(renderer.domElement);
-
     animate();
     render();
+}
+
+function setValuesFourLine1() {
+    // Straight Line 1
+    p1x = -1.0; p1y = -1.0; p1z = -1.0;
+    p2x = -0.33; p2y = -0.33; p2z = -0.33;
+    p3x = 0.33; p3y = 0.33; p3z = 0.33;
+    p4x = 1.0; p4y = 1.0; p4z = 1.0;
+
+    updateOutputLabelsFour();
+    computeCurveFourPointsForm();
+}
+
+function setValuesFourLine2() {
+    // Straight Line 2
+    p1x = -1.0; p1y = -1.0; p1z = -1.0;
+    p2x = -0.7; p2y = -0.7; p2z = -0.7;
+    p3x = 0.7; p3y = 0.7; p3z = 0.7;
+    p4x = 1.0; p4y = 1.0; p4z = 1.0;
+
+    updateOutputLabelsFour();
+    computeCurveFourPointsForm();
+}
+
+function setValuesFourLine3() {
+    // Curved Line
+    p1x = -1.0; p1y = -1.0; p1z = -1.0;
+    p2x = -1.0; p2y = 1.0; p2z = -1.0;
+    p3x = -1.0; p3y = 1.0; p3z = 1.0;
+    p4x = 1.0; p4y = 1.0; p4z = 1.0;
+
+    updateOutputLabelsFour();
+    computeCurveFourPointsForm();
+}
+
+function updateOutputLabelsFour() {
+    p1xRange.value = p1x; p1yRange.value = p1y; p1zRange.value = p1z;
+    p2xRange.value = p2x; p2yRange.value = p2y; p2zRange.value = p2z;
+    p3xRange.value = p3x; p3yRange.value = p3y; p3zRange.value = p3z;
+    p4xRange.value = p4x; p4yRange.value = p4y; p4zRange.value = p4z;
+
+    document.getElementById('opPoint1x').textContent = p1x.toFixed(3);
+    document.getElementById('opPoint1y').textContent = p1y.toFixed(3);
+    document.getElementById('opPoint1z').textContent = p1z.toFixed(3);
+
+    document.getElementById('opPoint2x').textContent = p2x.toFixed(3);
+    document.getElementById('opPoint2y').textContent = p2y.toFixed(3);
+    document.getElementById('opPoint2z').textContent = p2z.toFixed(3);
+
+    document.getElementById('opPoint3x').textContent = p3x.toFixed(3);
+    document.getElementById('opPoint3y').textContent = p3y.toFixed(3);
+    document.getElementById('opPoint3z').textContent = p3z.toFixed(3);
+
+    document.getElementById('opPoint4x').textContent = p4x.toFixed(3);
+    document.getElementById('opPoint4y').textContent = p4y.toFixed(3);
+    document.getElementById('opPoint4z').textContent = p4z.toFixed(3);
+}
+
+function setValuesHermiteLine1() {
+    // Straight Line
+    p1xh = -1.0; p1yh = -1.0; p1zh = -1.0;
+    p2xh = 1.0; p2yh = 1.0; p2zh = 1.0;
+    p1dxh = 1.0; p1dyh = 1.0; p1dzh = 1.0;
+    p2dxh = 1.0; p2dyh = 1.0; p2dzh = 1.0;
+
+    updateOutputLabelsHermite();
+    computeCurveHermiteForm();
+}
+
+function setValuesHermiteLine2() {
+    // Straight line - this is a 'non-linear' straight line
+    p1xh = -1.0; p1yh = -1.0; p1zh = -1.0;
+    p2xh = 1.0; p2yh = 1.0; p2zh = 1.0;
+    p1dxh = 10.0; p1dyh = 10.0; p1dzh = 10.0;
+    p2dxh = 10.0; p2dyh = 10.0; p2dzh = 10.0;
+
+    updateOutputLabelsHermite();
+    computeCurveHermiteForm();
+}
+
+function setValuesHermiteLine3() {
+    // Straight line - this is also a non-linear straight line
+    p1xh = -1.0; p1yh = -1.0; p1zh = -1.0;
+    p2xh = 1.0; p2yh = 1.0; p2zh = 1.0;
+    p1dxh = -10.0; p1dyh = -10.0; p1dzh = -10.0;
+    p2dxh = -10.0; p2dyh = -10.0; p2dzh = -10.0;
+
+    updateOutputLabelsHermite();
+    computeCurveHermiteForm();
+}
+
+function setValuesHermiteLine4() {
+    // Curve
+    p1xh = -1.0; p1yh = -1.0; p1zh = -1.0;
+    p2xh = 1.0; p2yh = 1.0; p2zh = 1.0;
+    p1dxh = -5.0; p1dyh = 5.0; p1dzh = -5.0;
+    p2dxh = 5.0; p2dyh = -5.0; p2dzh = 5.0;
+
+    updateOutputLabelsHermite();
+    computeCurveHermiteForm();
+}
+
+function updateOutputLabelsHermite() {
+    p1xRangeh.value = p1xh; p1yRangeh.value = p1yh; p1zRangeh.value = p1zh;
+    p2xRangeh.value = p2xh; p2yRangeh.value = p2yh; p2zRangeh.value = p2zh;
+    p1dxRangeh.value = p1dxh; p1dyRangeh.value = p1dyh; p1dzRangeh.value = p1dzh;
+    p2dxRangeh.value = p2dxh; p2dyRangeh.value = p2dyh; p2dzRangeh.value = p2dzh;
+
+    document.getElementById('opPoint1xh').textContent = p1xh.toFixed(3);
+    document.getElementById('opPoint1yh').textContent = p1yh.toFixed(3);
+    document.getElementById('opPoint1zh').textContent = p1zh.toFixed(3);
+
+    document.getElementById('opPoint2xh').textContent = p2xh.toFixed(3);
+    document.getElementById('opPoint2yh').textContent = p2yh.toFixed(3);
+    document.getElementById('opPoint2zh').textContent = p2zh.toFixed(3);
+
+    document.getElementById('opPoint1dxh').textContent = p1dxh.toFixed(3);
+    document.getElementById('opPoint1dyh').textContent = p1dyh.toFixed(3);
+    document.getElementById('opPoint1dzh').textContent = p1dzh.toFixed(3);
+
+    document.getElementById('opPoint2dxh').textContent = p2dxh.toFixed(3);
+    document.getElementById('opPoint2dyh').textContent = p2dyh.toFixed(3);
+    document.getElementById('opPoint2dzh').textContent = p2dzh.toFixed(3);
 }
 
 function initializeValues() {
@@ -347,9 +504,13 @@ function openPage(pageName, elmnt, color) {
 
     if (pageName === 'hermite') {
         pageCurrent = 'hermite';
+        initializeValues();
+        updateOutputLabelsFour();
         computeCurveHermiteForm();
     } else {
         pageCurrent = 'fourPoints';
+        initializeValues();
+        updateOutputLabelsHermite();
         computeCurveFourPointsForm();
     }
 }
@@ -508,39 +669,6 @@ function renderCurve() {
     scene.add(curveLine);
     render();
 }
-
-function setupCubePoints() {
-    let pt = new THREE.Vector3(halfCubeSide, -halfCubeSide, halfCubeSide); // Point A
-    points.push(pt);
-    pt = new THREE.Vector3(halfCubeSide, -halfCubeSide, -halfCubeSide); // Point B
-    points.push(pt);
-    pt = new THREE.Vector3(-halfCubeSide, -halfCubeSide, -halfCubeSide); // Point C
-    points.push(pt);
-    pt = new THREE.Vector3(-halfCubeSide, -halfCubeSide, halfCubeSide); // Point D
-    points.push(pt);
-    pt = new THREE.Vector3(halfCubeSide, halfCubeSide, halfCubeSide); // Point E
-    points.push(pt);
-    pt = new THREE.Vector3(halfCubeSide, halfCubeSide, -halfCubeSide); // Point F
-    points.push(pt);
-    pt = new THREE.Vector3(-halfCubeSide, halfCubeSide, -halfCubeSide); // Point G
-    points.push(pt);
-    pt = new THREE.Vector3(-halfCubeSide, halfCubeSide, halfCubeSide); // Point H
-    points.push(pt);
-    pt = new THREE.Vector3(0, 0, 0); // Point O
-    points.push(pt);
-}
-
-/* Doesn't work well - shows the actual triangulation of the cube
-   function setupWireframeBox() {
-    let geometry = new THREE.CubeGeometry(20, 20, 20);
-    let material = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        wireframe: true
-    });
-
-    let box = new THREE.Mesh(geometry, material);
-    scene.add(box);
-} */
 
 function setupWireframeBox() {
     let material = new THREE.LineBasicMaterial({ color: 0x0000ff });

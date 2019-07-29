@@ -32,3 +32,8 @@
 #hermite {
     background-color: #5971AD;
 }
+
+button {
+    background-color: darkslateblue;
+    color: whitesmoke; 
+}
