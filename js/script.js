@@ -47,7 +47,6 @@ let arrowHelper1, arrowHelper2, arrowHelper3;
 let arrowDirection1 = new THREE.Vector3();
 let arrowDirection2 = new THREE.Vector3();
 let arrowDirection3 = new THREE.Vector3();
-let bnFourLine1, bnFourLine2, bhHermLine1, bnHermLine2;
 
 window.onload = init;
 
@@ -61,6 +60,35 @@ function init() {
     noUPoints = 1000;
     uStep = 1.0 / noUPoints;
 
+    // Four Point Tab
+    p1xRange = document.getElementById('point1x');
+    p1yRange = document.getElementById('point1y');
+    p1zRange = document.getElementById('point1z');
+    p2xRange = document.getElementById('point2x');
+    p2yRange = document.getElementById('point2y');
+    p2zRange = document.getElementById('point2z');
+    p3xRange = document.getElementById('point3x');
+    p3yRange = document.getElementById('point3y');
+    p3zRange = document.getElementById('point3z');
+    p4xRange = document.getElementById('point4x');
+    p4yRange = document.getElementById('point4y');
+    p4zRange = document.getElementById('point4z');
+    
+
+    // Hermite Tab
+    p1xRangeh = document.getElementById('point1xh');
+    p1yRangeh = document.getElementById('point1yh');
+    p1zRangeh = document.getElementById('point1zh');
+    p2xRangeh = document.getElementById('point2xh');
+    p2yRangeh = document.getElementById('point2yh');
+    p2zRangeh = document.getElementById('point2zh');
+    p1dxRangeh = document.getElementById('point1dxh');
+    p1dyRangeh = document.getElementById('point1dyh');
+    p1dzRangeh = document.getElementById('point1dzh');
+    p2dxRangeh = document.getElementById('point2dxh');
+    p2dyRangeh = document.getElementById('point2dyh');
+    p2dzRangeh = document.getElementById('point2dzh');
+
     window.addEventListener('resize', onResize, false);
     document.getElementById("defaultOpen").click();
 
@@ -69,21 +97,18 @@ function init() {
     pageCurrent = 'fourPoints';
 
     // Point P1 - Four Point Form
-    p1xRange = document.getElementById('point1x');
     p1xRange.addEventListener('input', function () {
         p1x = parseFloat(p1xRange.value);
         document.getElementById('opPoint1x').textContent = p1x.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
-
-    p1yRange = document.getElementById('point1y');
+    
     p1yRange.addEventListener('input', function () {
         p1y = parseFloat(p1yRange.value);
         document.getElementById('opPoint1y').textContent = p1y.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p1zRange = document.getElementById('point1z');
     p1zRange.addEventListener('input', function () {
         p1z = parseFloat(p1zRange.value);
         document.getElementById('opPoint1z').textContent = p1z.toFixed(3);
@@ -91,21 +116,18 @@ function init() {
     }, false);
 
     // Point P2 - Four Point Form
-    p2xRange = document.getElementById('point2x');
     p2xRange.addEventListener('input', function () {
         p2x = parseFloat(p2xRange.value);
         document.getElementById('opPoint2x').textContent = p2x.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p2yRange = document.getElementById('point2y');
     p2yRange.addEventListener('input', function () {
         p2y = parseFloat(p2yRange.value);
         document.getElementById('opPoint2y').textContent = p2y.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p2zRange = document.getElementById('point2z');
     p2zRange.addEventListener('input', function () {
         p2z = parseFloat(p2zRange.value);
         document.getElementById('opPoint2z').textContent = p2z.toFixed(3);
@@ -113,21 +135,18 @@ function init() {
     }, false);
 
     // Point P3 - Four Point Form
-    p3xRange = document.getElementById('point3x');
     p3xRange.addEventListener('input', function () {
         p3x = parseFloat(p3xRange.value);
         document.getElementById('opPoint3x').textContent = p3x.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p3yRange = document.getElementById('point3y');
     p3yRange.addEventListener('input', function () {
         p3y = parseFloat(p3yRange.value);
         document.getElementById('opPoint3y').textContent = p3y.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p3zRange = document.getElementById('point3z');
     p3zRange.addEventListener('input', function () {
         p3z = parseFloat(p3zRange.value);
         document.getElementById('opPoint3z').textContent = p3z.toFixed(3);
@@ -135,21 +154,18 @@ function init() {
     }, false);
 
     // Point P4 - Four Point Form
-    p4xRange = document.getElementById('point4x');
     p4xRange.addEventListener('input', function () {
         p4x = parseFloat(p4xRange.value);
         document.getElementById('opPoint4x').textContent = p4x.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p4yRange = document.getElementById('point4y');
     p4yRange.addEventListener('input', function () {
         p4y = parseFloat(p4yRange.value);
         document.getElementById('opPoint4y').textContent = p4y.toFixed(3);
         computeCurveFourPointsForm();
     }, false);
 
-    p4zRange = document.getElementById('point4z');
     p4zRange.addEventListener('input', function () {
         p4z = parseFloat(p4zRange.value);
         document.getElementById('opPoint4z').textContent = p4z.toFixed(3);
@@ -157,21 +173,18 @@ function init() {
     }, false);
 
     // Point P1 - Hermite
-    p1xRangeh = document.getElementById('point1xh');
     p1xRangeh.addEventListener('input', function () {
         p1xh = parseFloat(p1xRangeh.value);
         document.getElementById('opPoint1xh').textContent = p1xh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p1yRangeh = document.getElementById('point1yh');
     p1yRangeh.addEventListener('input', function () {
         p1yh = parseFloat(p1yRangeh.value);
         document.getElementById('opPoint1yh').textContent = p1yh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p1zRangeh = document.getElementById('point1zh');
     p1zRangeh.addEventListener('input', function () {
         p1zh = parseFloat(p1zRangeh.value);
         document.getElementById('opPoint1zh').textContent = p1zh.toFixed(3);
@@ -179,21 +192,18 @@ function init() {
     }, false);
 
     // Point P2 - Hermite
-    p2xRangeh = document.getElementById('point2xh');
     p2xRangeh.addEventListener('input', function () {
         p2xh = parseFloat(p2xRangeh.value);
         document.getElementById('opPoint2xh').textContent = p2xh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p2yRangeh = document.getElementById('point2yh');
     p2yRangeh.addEventListener('input', function () {
         p2yh = parseFloat(p2yRangeh.value);
         document.getElementById('opPoint2yh').textContent = p2yh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p2zRangeh = document.getElementById('point2zh');
     p2zRangeh.addEventListener('input', function () {
         p2zh = parseFloat(p2zRangeh.value);
         document.getElementById('opPoint2zh').textContent = p2zh.toFixed(3);
@@ -201,21 +211,18 @@ function init() {
     }, false);
 
     // Derivative at Point P1 - Hermite
-    p1dxRangeh = document.getElementById('point1dxh');
     p1dxRangeh.addEventListener('input', function () {
         p1dxh = parseFloat(p1dxRangeh.value);
         document.getElementById('opPoint1dxh').textContent = p1dxh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p1dyRangeh = document.getElementById('point1dyh');
     p1dyRangeh.addEventListener('input', function () {
         p1dyh = parseFloat(p1dyRangeh.value);
         document.getElementById('opPoint1dyh').textContent = p1dyh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p1dzRangeh = document.getElementById('point1dzh');
     p1dzRangeh.addEventListener('input', function () {
         p1dzh = parseFloat(p1dzRangeh.value);
         document.getElementById('opPoint1dzh').textContent = p1dzh.toFixed(3);
@@ -223,21 +230,18 @@ function init() {
     }, false);
 
     // Derivative at Point P2 - Hermite
-    p2dxRangeh = document.getElementById('point2dxh');
     p2dxRangeh.addEventListener('input', function () {
         p2dxh = parseFloat(p2dxRangeh.value);
         document.getElementById('opPoint2dxh').textContent = p2dxh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p2dyRangeh = document.getElementById('point2dyh');
     p2dyRangeh.addEventListener('input', function () {
         p2dyh = parseFloat(p2dyRangeh.value);
         document.getElementById('opPoint2dyh').textContent = p2dyh.toFixed(3);
         computeCurveHermiteForm();
     }, false);
 
-    p2dzRangeh = document.getElementById('point2dzh');
     p2dzRangeh.addEventListener('input', function () {
         p2dzh = parseFloat(p2dzRangeh.value);
         document.getElementById('opPoint2dzh').textContent = p2dzh.toFixed(3);
@@ -505,12 +509,12 @@ function openPage(pageName, elmnt, color) {
     if (pageName === 'hermite') {
         pageCurrent = 'hermite';
         initializeValues();
-        updateOutputLabelsFour();
+        updateOutputLabelsHermite();
         computeCurveHermiteForm();
     } else {
         pageCurrent = 'fourPoints';
         initializeValues();
-        updateOutputLabelsHermite();
+        updateOutputLabelsFour();
         computeCurveFourPointsForm();
     }
 }
